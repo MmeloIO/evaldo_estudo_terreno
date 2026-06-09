@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plano Evaldo · Grão | Grupo Primo</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+/* ── TELA DE SENHA ── */
+#lock-screen {
+  position: fixed; inset: 0; z-index: 9999;
+  background: #0A0C1A;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+}
+#lock-screen .lock-inner {
+  text-align: center; padding: 48px 32px;
+  background: #111428; border: 1px solid #1a2050;
+  border-radius: 20px; width: 100%; max-width: 380px;
+}
+#lock-screen .lock-logo {
+  font-family: 'Playfair Display', serif;
+  color: #C9A84C; font-size: 18px; margin-bottom: 6px;
+}
+#lock-screen .lock-logo small {
+  display: block; font-family: 'DM Sans', sans-serif;
+  font-size: 10px; color: #5C6080; letter-spacing: 2px;
+  text-transform: uppercase; margin-top: 2px;
+}
+#lock-screen .lock-icon {
+  font-size: 36px; margin: 24px 0 8px;
+}
+#lock-screen h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; color: #F4F2ED; margin-bottom: 6px;
+}
+#lock-screen p {
+  font-size: 13px; color: #8B8FA8; margin-bottom: 28px;
+}
+#lock-screen input {
+  width: 100%; padding: 14px 16px;
+  background: #0A0C1A; border: 1px solid #1a2050;
+  border-radius: 10px; color: #F4F2ED;
+  font-family: 'DM Sans', sans-serif; font-size: 15px;
+  text-align: center; letter-spacing: 2px;
+  outline: none; transition: border-color 0.2s;
+  margin-bottom: 14px;
+}
+#lock-screen input:focus { border-color: rgba(201,168,76,0.5); }
+#lock-screen input.shake {
+  animation: shake 0.4s ease;
+  border-color: rgba(192,80,112,0.6) !important;
+}
+#lock-screen button {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, #C9A84C, #a88030);
+  border: none; border-radius: 10px;
+  color: #0A0C1A; font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  letter-spacing: 0.5px; transition: opacity 0.2s;
+}
+#lock-screen button:hover { opacity: 0.88; }
+#lock-screen .lock-error {
+  font-size: 12px; color: #C05070;
+  margin-top: 10px; min-height: 18px;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+#app { display: none; }
+</style>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0A0C1A;
+  --navy: #1E2761;
+  --gold: #C9A84C;
+  --gold-dim: rgba(201,168,76,0.15);
+  --white: #F4F2ED;
+  --muted: #8B8FA8;
+  --muted2: #5C6080;
+  --card: #111428;
+  --card-b: #1a2050;
+  --green: #3BAF80;
+  --green-dim: rgba(59,175,128,0.12);
+  --red: #C05070;
+  --red-dim: rgba(192,80,112,0.12);
+  --blue: #7C93F8;
+  --blue-dim: rgba(124,147,248,0.1);
+  --r: 12px;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* NAV */
+.sidenav {
+  position: fixed; top: 0; left: 0; height: 100vh; width: 220px;
+  background: #090b18;
+  border-right: 1px solid var(--card-b);
+  padding: 32px 20px;
+  display: flex; flex-direction: column; gap: 6px;
+  z-index: 100;
+  overflow-y: auto;
+}
+.sidenav .logo {
+  font-family: 'Playfair Display', serif;
+  color: var(--gold);
+  font-size: 15px;
+  margin-bottom: 28px;
+  line-height: 1.3;
+}
+.sidenav .logo small { display: block; font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--muted2); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+.nav-section { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted2); margin: 16px 0 6px; }
+.nav-link {
+  display: block; padding: 8px 12px; border-radius: 8px;
+  color: var(--muted); font-size: 13px; text-decoration: none;
+  transition: all 0.2s;
+}
+.nav-link:hover { background: var(--gold-dim); color: var(--gold); }
+.nav-link.active { background: var(--gold-dim); color: var(--gold); }
+
+/* MAIN */
+.main { margin-left: 220px; }
+
+/* HERO */
+.hero {
+  padding: 72px 48px 56px;
+  border-bottom: 1px solid var(--card-b);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -100px; right: -100px;
+  width: 500px; height: 500px;
+  background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.badge {
+  display: inline-block; font-size: 10px; font-weight: 600;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); border: 1px solid rgba(201,168,76,0.3);
+  padding: 4px 14px; border-radius: 100px; margin-bottom: 20px;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 700; line-height: 1.15; margin-bottom: 12px;
+}
+.hero h1 span { color: var(--gold); }
+.hero .subtitle { color: var(--muted); font-size: 15px; max-width: 500px; margin-bottom: 40px; }
+.hero-stats { display: flex; gap: 40px; flex-wrap: wrap; }
+.hero-stat .val {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 600; color: var(--gold);
+}
+.hero-stat .lbl { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted2); margin-top: 2px; }
+
+/* SECTIONS */
+.section {
+  padding: 56px 48px;
+  border-bottom: 1px solid var(--card-b);
+}
+.section:last-child { border-bottom: none; }
+.sec-eyebrow {
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+}
+.sec-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; font-weight: 700; margin-bottom: 6px;
+}
+.sec-sub { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+
+/* CARDS GRID */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 900px) {
+  .sidenav { display: none; }
+  .main { margin-left: 0; }
+  .hero, .section { padding: 40px 24px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-b);
+  border-radius: var(--r);
+  padding: 20px;
+}
+.card .c-label { font-size: 11px; color: var(--muted2); margin-bottom: 4px; }
+.card .c-val { font-size: 18px; font-weight: 600; color: var(--white); }
+.card .c-val.gold { color: var(--gold); }
+.card .c-val.green { color: var(--green); }
+.card .c-val.red { color: var(--red); }
+.card .c-sub { font-size: 12px; color: var(--muted2); margin-top: 4px; }
+
+/* FICHA VIVA */
+.ficha-block {
+  background: var(--card);
+  border: 1px solid var(--card-b);
+  border-radius: var(--r);
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+.ficha-block h4 {
+  font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+}
+.ficha-item {
+  display: flex; gap: 12px;
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 14px;
+}
+.ficha-item:last-child { border-bottom: none; }
+.ficha-item .fi-label { color: var(--muted2); min-width: 140px; flex-shrink: 0; }
+.ficha-item .fi-val { color: var(--white); }
+
+.tag-pill {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 3px 10px; border-radius: 100px; margin: 2px 3px 2px 0;
+}
+.tag-green { background: var(--green-dim); color: var(--green); border: 1px solid rgba(59,175,128,0.25); }
+.tag-gold { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); }
+.tag-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(192,80,112,0.25); }
+.tag-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(124,147,248,0.25); }
+
+/* TIMELINE RESUMO */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.tl-item { display: flex; gap: 20px; }
+.tl-line { display: flex; flex-direction: column; align-items: center; }
+.tl-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--gold); flex-shrink: 0; margin-top: 5px;
+}
+.tl-track { width: 1px; background: var(--card-b); flex: 1; min-height: 24px; }
+.tl-item:last-child .tl-track { display: none; }
+.tl-content { padding-bottom: 24px; }
+.tl-content .tl-title { font-weight: 600; font-size: 14px; color: var(--white); margin-bottom: 4px; }
+.tl-content .tl-body { font-size: 13.5px; color: var(--muted); }
+
+/* CENÁRIOS */
+.cenario-card {
+  background: var(--card);
+  border: 1px solid var(--card-b);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  transition: box-shadow 0.3s;
+}
+.cenario-card:hover { box-shadow: 0 8px 40px rgba(201,168,76,0.07); }
+.cenario-card.destaque { border-color: rgba(124,147,248,0.35); }
+
+.cen-head {
+  padding: 24px 28px 0;
+  display: flex; align-items: flex-start; gap: 18px;
+}
+.cen-letter {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 19px; font-weight: 700; flex-shrink: 0;
+}
+.la { background: var(--gold-dim); color: var(--gold); }
+.lb { background: var(--green-dim); color: var(--green); }
+.lc { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(124,147,248,0.3); }
+.ld { background: var(--red-dim); color: var(--red); }
+
+.cen-title h3 { font-family: 'Playfair Display', serif; font-size: 19px; margin-bottom: 3px; }
+.cen-title p { font-size: 13px; color: var(--muted); }
+.cen-badge {
+  margin-left: auto; white-space: nowrap;
+  font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 100px;
+}
+
+.cen-body { padding: 20px 28px 24px; }
+
+.num-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px; margin-bottom: 20px;
+}
+.num-item {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px; padding: 13px 14px;
+}
+.num-item .ni-l { font-size: 11px; color: var(--muted2); margin-bottom: 3px; }
+.num-item .ni-v { font-size: 15px; font-weight: 600; color: var(--white); }
+.ni-v.g { color: var(--green); }
+.ni-v.r { color: var(--red); }
+.ni-v.o { color: var(--gold); }
+
+.pc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+@media (max-width: 600px) { .pc-grid { grid-template-columns: 1fr; } }
+
+.pc-box { background: rgba(255,255,255,0.02); border-radius: 10px; padding: 14px 16px; }
+.pc-box h5 { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.pc-box.pro h5 { color: var(--green); }
+.pc-box.con h5 { color: var(--red); }
+.pc-box ul { list-style: none; }
+.pc-box ul li { font-size: 13px; color: var(--muted); padding: 3px 0 3px 16px; position: relative; }
+.pc-box.pro li::before { content: '↑'; position: absolute; left: 0; color: var(--green); font-size: 11px; top: 5px; }
+.pc-box.con li::before { content: '→'; position: absolute; left: 0; color: var(--red); font-size: 11px; top: 5px; }
+
+.comportamento {
+  background: rgba(201,168,76,0.04);
+  border: 1px solid rgba(201,168,76,0.14);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 10px 10px 0;
+  padding: 13px 16px;
+}
+.comportamento .bl { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
+.comportamento p { font-size: 13px; color: var(--muted); font-style: italic; }
+
+/* COMPARATIVO TABLE */
+.comp-wrap { overflow-x: auto; }
+table.comp {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+table.comp th {
+  background: var(--navy); color: var(--gold);
+  font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+  padding: 12px 16px; text-align: left;
+}
+table.comp td {
+  padding: 11px 16px; border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--muted); vertical-align: middle;
+}
+table.comp tr:last-child td { border-bottom: none; }
+table.comp tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
+table.comp td:first-child { color: var(--white); font-weight: 500; }
+.cg { color: var(--green); font-weight: 600; }
+.cr { color: var(--red); font-weight: 600; }
+.co { color: var(--gold); font-weight: 600; }
+.cm { color: var(--muted2); }
+
+/* CHECKLISTS */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 14px; color: var(--muted);
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist li .ck-box {
+  width: 20px; height: 20px; border-radius: 6px;
+  border: 1.5px solid var(--card-b); flex-shrink: 0; margin-top: 1px;
+}
+.checklist.urgent li .ck-box { border-color: rgba(201,168,76,0.4); }
+.checklist.later li .ck-box { border-color: rgba(255,255,255,0.12); }
+
+/* RECOMENDAÇÃO */
+.rec-box {
+  background: linear-gradient(135deg, rgba(201,168,76,0.07) 0%, rgba(30,39,97,0.35) 100%);
+  border: 1px solid rgba(201,168,76,0.22);
+  border-radius: 16px; padding: 32px;
+}
+.rec-box h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 14px; }
+.rec-box p { color: var(--muted); margin-bottom: 10px; font-size: 14px; }
+.rec-box p:last-child { margin-bottom: 0; }
+.rec-box strong { color: var(--gold); font-weight: 600; }
+
+/* PERGUNTAS */
+.perguntas-group { margin-bottom: 28px; }
+.perguntas-group h4 {
+  font-size: 11px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+}
+.pergunta-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 14px; color: var(--muted);
+}
+.pergunta-item:last-child { border-bottom: none; }
+.pergunta-item::before {
+  content: '→'; color: var(--gold); font-size: 12px; flex-shrink: 0; margin-top: 3px;
+}
+
+/* BRIEFING */
+.briefing-item {
+  padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.briefing-item:last-child { border-bottom: none; }
+.briefing-item .bi-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+}
+.briefing-item p { font-size: 14px; color: var(--muted); }
+
+/* PROGRESS BAR */
+.progress-wrap { margin-bottom: 16px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+.progress-label .pl { color: var(--white); }
+.progress-label .pv { color: var(--gold); font-weight: 600; }
+.progress-bar { height: 6px; background: rgba(255,255,255,0.07); border-radius: 10px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--gold), var(--green)); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* FOOTER */
+.footer {
+  border-top: 1px solid var(--card-b);
+  padding: 32px 48px; display: flex;
+  justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+}
+.footer .fl { font-family: 'Playfair Display', serif; color: var(--gold); font-size: 15px; }
+.footer .fr { font-size: 12px; color: var(--muted2); text-align: right; }
+</style>
+</head>
+<body>
+
+<!-- TELA DE SENHA -->
+<div id="lock-screen">
+  <div class="lock-inner">
+    <div class="lock-logo">Grão | Grupo Primo<small>Planejamento Financeiro</small></div>
+    <div class="lock-icon">🔒</div>
+    <h2>Documento protegido</h2>
+    <p>Digite a senha para acessar seu plano financeiro</p>
+    <input type="password" id="pwd-input" placeholder="••••••••••" maxlength="20"
+      onkeydown="if(event.key==='Enter')checkPwd()" autocomplete="off" />
+    <button onclick="checkPwd()">Acessar plano</button>
+    <div class="lock-error" id="pwd-error"></div>
+  </div>
+</div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<div id="app">
+
+<!-- SIDENAV -->
+<nav class="sidenav">
+  <div class="logo">Grão | Grupo Primo<small>Planejamento Financeiro</small></div>
+  <div class="nav-section">Reunião</div>
+  <a href="#resumo" class="nav-link">Resumo executivo</a>
+  <div class="nav-section">Patrimônio</div>
+  <a href="#patrimonio" class="nav-link">Situação atual</a>
+  <div class="nav-section">Decisão</div>
+  <a href="#premissas" class="nav-link">Premissas</a>
+  <a href="#cenarios" class="nav-link">6 Cenários</a>
+  <a href="#comparativo" class="nav-link">Comparativo</a>
+  <a href="#custo-oportunidade" class="nav-link">Custo de oportunidade</a>
+  <a href="#recomendacao" class="nav-link">Orientação</a>
+  <div class="nav-section">Perguntas</div>
+  <a href="#briefing" class="nav-link">Briefing próx. reunião</a>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- HERO -->
+<header class="hero">
+  <div class="badge">Análise Completa · Junho 2026</div>
+  <h1>Plano <span>Evaldo</span></h1>
+  <p class="subtitle">Reunião de acompanhamento · Decisão estratégica do terreno · Próximos passos estruturados</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">R$ 52k</div><div class="lbl">Reserva de emergência</div></div>
+    <div class="hero-stat"><div class="val">R$ 60k</div><div class="lbl">FGTS disponível</div></div>
+    <div class="hero-stat"><div class="val">~R$ 30k</div><div class="lbl">Renda média mensal</div></div>
+    <div class="hero-stat"><div class="val">Dez/26</div><div class="lbl">Quitação das dívidas</div></div>
+  </div>
+</header>
+
+<!-- ── RESUMO EXECUTIVO ── -->
+<section class="section reveal" id="resumo">
+  <div class="sec-eyebrow">Reunião de acompanhamento</div>
+  <div class="sec-title">O que foi discutido</div>
+  <div class="sec-sub">Principais pontos da reunião de Junho/2026</div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-line"><div class="tl-dot"></div><div class="tl-track"></div></div>
+      <div class="tl-content">
+        <div class="tl-title">Transição profissional</div>
+        <div class="tl-body">Promoção recente confirmada — assumiu equipe maior na Gazin. Ajustes de renda e orçamento em andamento pós-mudança.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"><div class="tl-dot"></div><div class="tl-track"></div></div>
+      <div class="tl-content">
+        <div class="tl-title">Férias e orçamento</div>
+        <div class="tl-body">Férias aproveitadas sem parcelamento — gastos à vista. Orçamento em reajuste natural pós-férias, sem comprometer renda futura.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"><div class="tl-dot"></div><div class="tl-track"></div></div>
+      <div class="tl-content">
+        <div class="tl-title">Decisão estratégica: terreno da mãe</div>
+        <div class="tl-body">Terreno de R$ 200k com pressão de prazo (mãe quer vender). Dois cenários discutidos: FGTS + financiamento e crédito com garantia da casa. Matheus vai modelar 4 cenários e enviar estudo completo.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"><div class="tl-dot"></div><div class="tl-track"></div></div>
+      <div class="tl-content">
+        <div class="tl-title">Dívidas quase zeradas</div>
+        <div class="tl-body">Consignado encerra em dezembro/26. Consórcio de veículo (~R$ 62k restante) reclassificado como bem móvel futuro — sem urgência.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-line"><div class="tl-dot"></div><div class="tl-track"></div></div>
+      <div class="tl-content">
+        <div class="tl-title">Próxima etapa: proteção</div>
+        <div class="tl-body">Reunião dedicada a seguro de vida, proteção de renda e educação dos filhos. Base do planejamento CFP.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FICHA VIVA ── -->
+
+<!-- ── PATRIMÔNIO ── -->
+<section class="section reveal" id="patrimonio">
+  <div class="sec-eyebrow">Situação patrimonial</div>
+  <div class="sec-title">Onde você está hoje</div>
+  <div class="sec-sub">Visão consolidada · Junho/2026</div>
+
+  <div class="grid-4" style="margin-bottom:24px;">
+    <div class="card"><div class="c-label">Reserva de emergência</div><div class="c-val gold">R$ 52.081</div><div class="c-sub">~8,8 meses cobertos</div></div>
+    <div class="card"><div class="c-label">FGTS disponível</div><div class="c-val gold">R$ 60.000</div><div class="c-sub">Estratégia a definir</div></div>
+    <div class="card"><div class="c-label">Casa quitada</div><div class="c-val green">✓ Quitada</div><div class="c-sub">Alugada · valor a confirmar</div></div>
+    <div class="card"><div class="c-label">Consórcio (veículo)</div><div class="c-val">R$ 62.379</div><div class="c-sub">Saldo devedor · 34 meses</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div style="font-size:12px;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">Dívidas — andamento</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span class="pl">Consignado</span><span class="pv">Enc. Dez/2026</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+      </div>
+      <div class="progress-wrap" style="margin-top:12px;">
+        <div class="progress-label"><span class="pl">Consórcio veículo</span><span class="pv">R$ 62.379 restantes</span></div>
+        <div class="progress-bar"><div class="progress-fill" style="width:45%;background:linear-gradient(90deg,var(--navy),var(--blue))"></div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:12px;color:var(--muted2);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;">Projetos de vida ativos</div>
+      <div class="ficha-block" style="padding:16px 20px;">
+        <div class="ficha-item"><span class="fi-label">Viagem EUA</span><span class="fi-val"><span class="tag-pill tag-gold">2028</span> Em planejamento</span></div>
+        <div class="ficha-item"><span class="fi-label">Reforma da casa</span><span class="fi-val"><span class="tag-pill tag-blue">2030</span> Em dúvida</span></div>
+        <div class="ficha-item"><span class="fi-label">Terreno</span><span class="fi-val"><span class="tag-pill tag-red">Decisão urgente</span> Análise abaixo</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PREMISSAS ── -->
+<section class="section reveal" id="premissas">
+  <div class="sec-eyebrow">Decisão estratégica</div>
+  <div class="sec-title">Análise do Terreno</div>
+  <div class="sec-sub">Premissas utilizadas nos cenários</div>
+
+  <div class="grid-4">
+    <div class="card"><div class="c-label">Valor do terreno</div><div class="c-val gold">R$ 200.000</div></div>
+    <div class="card"><div class="c-label">FGTS disponível</div><div class="c-val gold">R$ 60.000</div></div>
+    <div class="card"><div class="c-label">Financiamento SFH</div><div class="c-val">10,5% a.a.</div></div>
+    <div class="card"><div class="c-label">Home Equity</div><div class="c-val green">8,0% a.a.</div></div>
+    <div class="card"><div class="c-label">Prazo simulado</div><div class="c-val">120 meses</div></div>
+    <div class="card"><div class="c-label">CDI (custo oport.)</div><div class="c-val">11,5% a.a.</div></div>
+    <div class="card"><div class="c-label">Condomínio estimado</div><div class="c-val red">R$ 1.100/mês</div></div>
+    <div class="card"><div class="c-label">Valorização cond.</div><div class="c-val green">8–12% a.a.</div></div>
+  </div>
+</section>
+
+<!-- ── CENÁRIOS ── -->
+<section class="section reveal" id="cenarios">
+  <div class="sec-eyebrow">6 caminhos possíveis</div>
+  <div class="sec-title">Os Cenários</div>
+  <div class="sec-sub">Análise numérica, comportamental e de impacto no seu plano de vida</div>
+
+  <!-- A -->
+  <div class="cenario-card">
+    <div class="cen-head">
+      <div class="cen-letter la">A</div>
+      <div class="cen-title"><h3>FGTS + Financiamento Imobiliário</h3><p>Entrada via FGTS · Saldo financiado pelo banco (SFH)</p></div>
+      <span class="cen-badge tag-pill tag-gold">Mais comum</span>
+    </div>
+    <div class="cen-body">
+      <div class="num-grid">
+        <div class="num-item"><div class="ni-l">Entrada (FGTS)</div><div class="ni-v o">R$ 60.000</div></div>
+        <div class="num-item"><div class="ni-l">Valor financiado</div><div class="ni-v">R$ 140.000</div></div>
+        <div class="num-item"><div class="ni-l">Prestação estimada</div><div class="ni-v r">~R$ 1.850/mês</div></div>
+        <div class="num-item"><div class="ni-l">+ Condomínio</div><div class="ni-v">R$ 1.100/mês</div></div>
+        <div class="num-item"><div class="ni-l">Compromisso total/mês</div><div class="ni-v r">~R$ 2.950/mês</div></div>
+        <div class="num-item"><div class="ni-l">Custo real do terreno</div><div class="ni-v">~R$ 282.000</div></div>
+        <div class="num-item"><div class="ni-l">Investimentos preservados</div><div class="ni-v g">✓ Sim</div></div>
+        <div class="num-item"><div class="ni-l">FGTS após compra</div><div class="ni-v r">R$ 0</div></div>
+      </div>
+      <div class="pc-grid">
+        <div class="pc-box pro"><h5>✦ Pontos positivos</h5><ul><li>Usa FGTS que rende abaixo do CDI (TR)</li><li>Taxa SFH entre as mais baratas do mercado</li><li>Investimentos ficam intactos</li><li>Processo bancário mais simples</li></ul></div>
+        <div class="pc-box con"><h5>→ Pontos de atenção</h5><ul><li>~R$ 2.950/mês por 10 anos no orçamento</li><li>FGTS zerado — perde reserva estratégica</li><li>Renda variável pode pressionar a parcela</li><li>Reduz capacidade de investir mensalmente</li></ul></div>
+      </div>
+      <div class="comportamento"><div class="bl">🧠 Lente comportamental</div><p>"Estou usando um dinheiro parado para transformar em patrimônio real." — Gera sensação de controle e oportunidade aproveitada. O risco é subestimar o impacto da parcela nos meses com comissão menor.</p></div>
+    </div>
+  </div>
+
+  <!-- B -->
+  <div class="cenario-card">
+    <div class="cen-head">
+      <div class="cen-letter lb">B</div>
+      <div class="cen-title"><h3>Crédito com Garantia da Casa</h3><p>Home Equity · Casa quitada como garantia · FGTS preservado</p></div>
+      <span class="cen-badge tag-pill tag-green">Taxa menor</span>
+    </div>
+    <div class="cen-body">
+      <div class="num-grid">
+        <div class="num-item"><div class="ni-l">Crédito obtido</div><div class="ni-v o">R$ 200.000</div></div>
+        <div class="num-item"><div class="ni-l">Taxa estimada</div><div class="ni-v g">8,0% a.a.</div></div>
+        <div class="num-item"><div class="ni-l">Prestação estimada</div><div class="ni-v r">~R$ 2.430/mês</div></div>
+        <div class="num-item"><div class="ni-l">+ Condomínio</div><div class="ni-v">R$ 1.100/mês</div></div>
+        <div class="num-item"><div class="ni-l">Compromisso total/mês</div><div class="ni-v r">~R$ 3.530/mês</div></div>
+        <div class="num-item"><div class="ni-l">Custo dos juros</div><div class="ni-v">~R$ 91.600</div></div>
+        <div class="num-item"><div class="ni-l">FGTS preservado</div><div class="ni-v g">R$ 60.000 ✓</div></div>
+        <div class="num-item"><div class="ni-l">Garantia usada</div><div class="ni-v r">Casa quitada</div></div>
+      </div>
+      <div class="pc-grid">
+        <div class="pc-box pro"><h5>✦ Pontos positivos</h5><ul><li>Menor taxa do mercado (home equity)</li><li>FGTS fica livre para outras oportunidades</li><li>Financia 100% sem entrada</li></ul></div>
+        <div class="pc-box con"><h5>→ Pontos de atenção</h5><ul><li>Maior compromisso mensal dos 4 cenários</li><li>Casa quitada vira garantia — risco real</li><li>Exige estabilidade de renda por longo prazo</li></ul></div>
+      </div>
+      <div class="comportamento"><div class="bl">🧠 Lente comportamental</div><p>"Estou usando o que já construí como alavanca." — Requer maturidade elevada. A pergunta essencial: se a comissão cair por 3 meses, você consegue honrar R$ 3.530/mês sem comprometer a família?</p></div>
+    </div>
+  </div>
+
+  <!-- C -->
+  <div class="cenario-card destaque">
+    <div class="cen-head">
+      <div class="cen-letter lc">C</div>
+      <div class="cen-title"><h3>Troca — Terrenos da Mãe → Condomínio de Luxo</h3><p>Permuta sem desembolso · FGTS e investimentos 100% intactos</p></div>
+      <span class="cen-badge tag-pill tag-blue">⭐ Mais eficiente</span>
+    </div>
+    <div class="cen-body">
+      <div class="num-grid">
+        <div class="num-item"><div class="ni-l">Desembolso imediato</div><div class="ni-v g">R$ 0</div></div>
+        <div class="num-item"><div class="ni-l">Terreno recebido</div><div class="ni-v o">~R$ 200.000</div></div>
+        <div class="num-item"><div class="ni-l">Condomínio mensal</div><div class="ni-v r">~R$ 1.100/mês</div></div>
+        <div class="num-item"><div class="ni-l">FGTS preservado</div><div class="ni-v g">R$ 60.000 ✓</div></div>
+        <div class="num-item"><div class="ni-l">Investimentos</div><div class="ni-v g">✓ Intactos</div></div>
+        <div class="num-item"><div class="ni-l">Projeção 5 anos (8%)</div><div class="ni-v g">~R$ 293.000</div></div>
+        <div class="num-item"><div class="ni-l">Projeção 10 anos (8%)</div><div class="ni-v g">~R$ 431.000</div></div>
+        <div class="num-item"><div class="ni-l">Liquidez futura</div><div class="ni-v g">Alta</div></div>
+      </div>
+      <div class="pc-grid">
+        <div class="pc-box pro"><h5>✦ Pontos positivos</h5><ul><li>Sem crédito, sem parcelas de financiamento</li><li>Terreno em condomínio valoriza mais que avulso</li><li>FGTS e investimentos 100% preservados</li><li>Maior liquidez futura — mercado comprador existe</li></ul></div>
+        <div class="pc-box con"><h5>→ Pontos de atenção</h5><ul><li>Condomínio de ~R$ 1.100/mês sem retorno imediato</li><li>Depende da negociação fechar bem</li><li>Terreno parado — só valorização, sem renda</li></ul></div>
+      </div>
+      <div class="comportamento"><div class="bl">🧠 Lente comportamental</div><p>"Estou trocando por algo maior sem gastar nada agora." — O cuidado: R$ 1.100/mês × 5 anos = R$ 66.000 em condomínio sem retorno imediato. Faz sentido se o terreno valorizar acima disso — e em condomínio fechado de luxo, as chances são altas.</p></div>
+    </div>
+  </div>
+
+  <!-- D -->
+  <div class="cenario-card">
+    <div class="cen-head">
+      <div class="cen-letter ld">D</div>
+      <div class="cen-title"><h3>Não comprar. Manter e Investir.</h3><p>Declinar a oferta · FGTS aplicado · Plano atual preservado</p></div>
+      <span class="cen-badge tag-pill tag-red">Sem risco</span>
+    </div>
+    <div class="cen-body">
+      <div class="num-grid">
+        <div class="num-item"><div class="ni-l">Compromisso adicional</div><div class="ni-v g">R$ 0/mês</div></div>
+        <div class="num-item"><div class="ni-l">FGTS investido 10 anos</div><div class="ni-v g">R$ 60k → ~R$ 142k</div></div>
+        <div class="num-item"><div class="ni-l">Plano atual (EUA 2028)</div><div class="ni-v g">✓ Intacto</div></div>
+        <div class="num-item"><div class="ni-l">Capacidade de investir</div><div class="ni-v g">Máxima</div></div>
+        <div class="num-item"><div class="ni-l">Terreno da mãe</div><div class="ni-v r">Vai para terceiro</div></div>
+        <div class="num-item"><div class="ni-l">Risco financeiro</div><div class="ni-v g">Nenhum</div></div>
+      </div>
+      <div class="pc-grid">
+        <div class="pc-box pro"><h5>✦ Pontos positivos</h5><ul><li>Zero pressão financeira adicional</li><li>FGTS rende mais investido do que em imóvel</li><li>Projetos atuais seguem sem interferência</li><li>Liberdade para oportunidades melhores</li></ul></div>
+        <div class="pc-box con"><h5>→ Pontos de atenção</h5><ul><li>Possível arrependimento se o terreno valorizar muito</li><li>Relação com a mãe pode ser afetada</li><li>Oportunidade de preço de custo se perde</li></ul></div>
+      </div>
+      <div class="comportamento"><div class="bl">🧠 Lente comportamental</div><p>"Às vezes a melhor decisão financeira é dizer não." — Exige maturidade emocional real diante da pressão familiar. A pergunta que vale: se esse terreno não fosse da sua mãe, você compraria hoje?</p></div>
+    </div>
+  </div>
+
+  <!-- E -->
+  <div class="cenario-card" style="border-color:rgba(201,168,76,0.3);">
+    <div class="cen-head">
+      <div class="cen-letter" style="background:linear-gradient(135deg,rgba(201,168,76,0.2),rgba(59,175,128,0.2));color:#d4b86a;border:1px solid rgba(201,168,76,0.3);">E</div>
+      <div class="cen-title"><h3>FGTS + Home Equity Combinados</h3><p>Entrada via FGTS · Complemento via crédito com garantia da casa · Menor parcela possível</p></div>
+      <span class="cen-badge tag-pill tag-gold">Menor parcela</span>
+    </div>
+    <div class="cen-body">
+      <div style="background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13.5px;color:var(--muted);">
+        <strong style="color:var(--gold);">Como funciona:</strong> Você usa R$ 60k do FGTS como entrada e busca um Home Equity de apenas R$ 140k (em vez de R$ 200k), usando a casa quitada como garantia. Com capital menor e taxa menor, a parcela cai bastante em relação ao Cenário B puro.
+      </div>
+      <div class="num-grid">
+        <div class="num-item"><div class="ni-l">Entrada (FGTS)</div><div class="ni-v o">R$ 60.000</div></div>
+        <div class="num-item"><div class="ni-l">Home Equity (complemento)</div><div class="ni-v">R$ 140.000</div></div>
+        <div class="num-item"><div class="ni-l">Taxa Home Equity</div><div class="ni-v g">8,0% a.a.</div></div>
+        <div class="num-item"><div class="ni-l">Prazo</div><div class="ni-v">120 meses</div></div>
+        <div class="num-item"><div class="ni-l">Prestação estimada</div><div class="ni-v o">~R$ 1.700/mês</div></div>
+        <div class="num-item"><div class="ni-l">+ Condomínio</div><div class="ni-v">R$ 1.100/mês</div></div>
+        <div class="num-item"><div class="ni-l">Compromisso total/mês</div><div class="ni-v o">~R$ 2.800/mês</div></div>
+        <div class="num-item"><div class="ni-l">Custo total dos juros</div><div class="ni-v">~R$ 64.000</div></div>
+        <div class="num-item"><div class="ni-l">Custo real do terreno</div><div class="ni-v">~R$ 264.000</div></div>
+        <div class="num-item"><div class="ni-l">FGTS após compra</div><div class="ni-v r">R$ 0</div></div>
+        <div class="num-item"><div class="ni-l">Investimentos preservados</div><div class="ni-v g">✓ Sim</div></div>
+        <div class="num-item"><div class="ni-l">Garantia usada</div><div class="ni-v o">Casa (parcial)</div></div>
+      </div>
+      <div class="pc-grid">
+        <div class="pc-box pro"><h5>✦ Pontos positivos</h5><ul><li>Menor parcela mensal entre os cenários de compra direta</li><li>Combina taxa SFH-equivalente com Home Equity reduzido</li><li>Juros totais menores que o Cenário B (capital menor)</li><li>Usa o FGTS que rende abaixo da inflação (TR)</li><li>Investimentos financeiros 100% preservados</li></ul></div>
+        <div class="pc-box con"><h5>→ Pontos de atenção</h5><ul><li>Duas operações simultâneas — mais burocracia</li><li>FGTS zerado — sem reserva estratégica</li><li>Casa ainda serve como garantia (risco real)</li><li>Renda variável ainda pode pressionar nos meses fracos</li></ul></div>
+      </div>
+      <div class="comportamento"><div class="bl">🧠 Lente comportamental</div><p>"Estou usando tudo que tenho disponível para minimizar a dívida." — É o cenário que maximiza o uso de recursos próprios antes de buscar crédito. Psicologicamente confortável para quem quer sentir que "colocou o máximo de pele no jogo". O risco é zerar o FGTS e ainda ter a casa como garantia ao mesmo tempo.</p></div>
+    </div>
+  </div>
+
+  <!-- F -->
+  <div class="cenario-card">
+    <div class="cen-head">
+      <div class="cen-letter" style="background:rgba(124,147,248,0.12);color:#a0b0ff;border:1px solid rgba(124,147,248,0.25);">F</div>
+      <div class="cen-title"><h3>Aguardar — Construir Reserva e Comprar à Vista</h3><p>Disciplina de acumulação · Compra sem dívida em 24–36 meses</p></div>
+      <span class="cen-badge tag-pill tag-blue">Sem juros</span>
+    </div>
+    <div class="cen-body">
+      <div style="background:rgba(124,147,248,0.05);border:1px solid rgba(124,147,248,0.15);border-radius:10px;padding:14px 16px;margin-bottom:18px;font-size:13.5px;color:var(--muted);">
+        <strong style="color:var(--blue);">Como funciona:</strong> Evaldo negocia um prazo com a mãe (ou com o empresário) e nos próximos 24–36 meses direciona parte da renda + FGTS para uma reserva específica do terreno, comprando à vista — sem juros, sem garantia, sem parcela.
+      </div>
+      <div class="num-grid">
+        <div class="num-item"><div class="ni-l">Aporte mensal necessário</div><div class="ni-v o">~R$ 4.200/mês</div></div>
+        <div class="num-item"><div class="ni-l">Prazo para acumulação</div><div class="ni-v">36 meses</div></div>
+        <div class="num-item"><div class="ni-l">FGTS somado à reserva</div><div class="ni-v g">R$ 60.000</div></div>
+        <div class="num-item"><div class="ni-l">Total acumulado (CDI 11,5%)</div><div class="ni-v g">~R$ 215.000</div></div>
+        <div class="num-item"><div class="ni-l">Juros pagos</div><div class="ni-v g">R$ 0</div></div>
+        <div class="num-item"><div class="ni-l">Garantia usada</div><div class="ni-v g">Nenhuma</div></div>
+        <div class="num-item"><div class="ni-l">Compromisso após compra</div><div class="ni-v o">R$ 1.100/mês (cond.)</div></div>
+        <div class="num-item"><div class="ni-l">Investimentos preservados</div><div class="ni-v o">Parcialmente</div></div>
+        <div class="num-item"><div class="ni-l">Custo real do terreno</div><div class="ni-v g">R$ 200.000</div></div>
+        <div class="num-item"><div class="ni-l">Terreno disponível hoje</div><div class="ni-v r">Depende de negociação</div></div>
+      </div>
+      <div class="pc-grid">
+        <div class="pc-box pro"><h5>✦ Pontos positivos</h5><ul><li>Zero juros — paga o preço real do terreno</li><li>Sem garantias — casa quitada permanece livre</li><li>Sem parcela de longo prazo no orçamento</li><li>FGTS rende CDI durante o período de acumulação</li><li>Chegada ao terreno com patrimônio intacto</li></ul></div>
+        <div class="pc-box con"><h5>→ Pontos de atenção</h5><ul><li>Depende da mãe (ou do empresário) aceitar esperar</li><li>Se vender para terceiro antes, oportunidade perdida</li><li>Exige disciplina alta: R$ 4.200/mês destinados ao objetivo</li><li>Renda variável torna a disciplina mais desafiadora</li></ul></div>
+      </div>
+      <div class="comportamento"><div class="bl">🧠 Lente comportamental</div><p>"Quero esse terreno — mas do meu jeito, sem me enredar em dívidas." — O cenário mais disciplinado. Funciona para quem consegue negociar prazo com a mãe e tem maturidade para esperar sem agir sob pressão emocional. Se o terreno realmente vale a pena, vale a conversa honesta com ela sobre um prazo de 2 a 3 anos.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMPARATIVO ── -->
+<section class="section reveal" id="comparativo">
+  <div class="sec-eyebrow">Visão consolidada</div>
+  <div class="sec-title">Quadro Comparativo</div>
+  <div class="sec-sub">Os 6 cenários lado a lado</div>
+
+  <div class="comp-wrap">
+    <table class="comp">
+      <thead>
+        <tr>
+          <th>Critério</th>
+          <th>A · FGTS + Financ.</th>
+          <th>B · Home Equity</th>
+          <th>C · Troca ⭐</th>
+          <th>D · Não comprar</th>
+          <th>E · FGTS + HE</th>
+          <th>F · Acumular</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Impacto mensal</td><td class="co">R$ 2.950</td><td class="cr">R$ 3.530</td><td class="cm">R$ 1.100</td><td class="cg">R$ 0</td><td class="co">R$ 2.800</td><td class="co">R$ 4.200 (temp.)</td></tr>
+        <tr><td>Preserva FGTS</td><td class="cr">✗ Não</td><td class="cg">✓ Sim</td><td class="cg">✓ Sim</td><td class="cg">✓ Sim</td><td class="cr">✗ Não</td><td class="cg">✓ Sim (rende)</td></tr>
+        <tr><td>Preserva investimentos</td><td class="cg">✓ Sim</td><td class="cg">✓ Sim</td><td class="cg">✓ Sim</td><td class="cg">✓ Sim</td><td class="cg">✓ Sim</td><td class="co">Parcialmente</td></tr>
+        <tr><td>Juros pagos</td><td class="cr">~R$ 82k</td><td class="cr">~R$ 92k</td><td class="cg">R$ 0</td><td class="cg">R$ 0</td><td class="co">~R$ 64k</td><td class="cg">R$ 0</td></tr>
+        <tr><td>Risco financeiro</td><td class="co">Médio</td><td class="cr">Alto</td><td class="cg">Baixo</td><td class="cg">Nenhum</td><td class="co">Médio</td><td class="cg">Baixo</td></tr>
+        <tr><td>Garantia usada</td><td class="cg">Nenhuma</td><td class="cr">Casa quitada</td><td class="cg">Nenhuma</td><td class="cg">Nenhuma</td><td class="co">Casa (parcial)</td><td class="cg">Nenhuma</td></tr>
+        <tr><td>Potencial de valorização</td><td class="co">Médio</td><td class="co">Médio</td><td class="cg">Alto</td><td class="cm">—</td><td class="co">Médio</td><td class="co">Médio/Alto</td></tr>
+        <tr><td>Depende de negociação</td><td class="cg">Não</td><td class="cg">Não</td><td class="co">Sim (troca)</td><td class="cg">Não</td><td class="cg">Não</td><td class="cr">Sim (prazo)</td></tr>
+        <tr><td>Pressão emocional</td><td class="co">Média</td><td class="cr">Alta</td><td class="cg">Baixa</td><td class="co">Média (culpa)</td><td class="co">Média</td><td class="co">Média (espera)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── CUSTO DE OPORTUNIDADE ── -->
+<section class="section reveal" id="custo-oportunidade">
+  <div class="sec-eyebrow">O que você abre mão ao decidir</div>
+  <div class="sec-title">Custo de Oportunidade</div>
+  <div class="sec-sub">Taxa de retorno real de 4% a.a. · O que R$ 200.000 renderiam investidos ao longo do tempo</div>
+
+  <!-- Conceito -->
+  <div style="background:var(--card);border:1px solid var(--card-b);border-left:3px solid var(--gold);border-radius:0 12px 12px 0;padding:18px 22px;margin-bottom:32px;">
+    <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">O que é custo de oportunidade?</div>
+    <p style="font-size:14px;color:var(--muted);">É o retorno que você <em>deixa de ganhar</em> ao imobilizar dinheiro em um ativo. Aqui usamos <strong style="color:var(--white);">4% a.a. de juros real</strong> — ou seja, já descontada a inflação. Esse é o patamar conservador de um investimento bem estruturado no longo prazo (ex: Tesouro IPCA+, fundos multimercado conservadores).</p>
+  </div>
+
+  <!-- Cards de comparação -->
+  <div class="grid-2" style="margin-bottom:32px;">
+    <div class="card" style="border-color:rgba(201,168,76,0.25);">
+      <div class="c-label">FGTS de R$ 60k investido por 10 anos (4% real a.a.)</div>
+      <div class="c-val gold" style="font-size:26px;margin:8px 0;">R$ 88.814</div>
+      <div class="c-sub">Ganho real: R$ 28.814 acima da inflação</div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--card-b);">
+        <div style="font-size:12px;color:var(--muted2);margin-bottom:4px;">vs. FGTS parado (TR ≈ 0% real)</div>
+        <div style="font-size:15px;color:var(--red);font-weight:600;">R$ 60.000 — sem ganho real</div>
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(59,175,128,0.25);">
+      <div class="c-label">R$ 200k investidos por 10 anos (4% real a.a.)</div>
+      <div class="c-val green" style="font-size:26px;margin:8px 0;">R$ 296.049</div>
+      <div class="c-sub">Ganho real: R$ 96.049 acima da inflação</div>
+      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--card-b);">
+        <div style="font-size:12px;color:var(--muted2);margin-bottom:4px;">Esse é o valor que você abre mão ao imobilizar no terreno</div>
+        <div style="font-size:15px;color:var(--gold);font-weight:600;">Custo de oportunidade: R$ 96.049</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfico de projeção -->
+  <div class="card" style="padding:28px;margin-bottom:24px;">
+    <div style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">Projeção comparativa · 10 anos · Valores reais (descontada inflação)</div>
+    <div style="font-size:13px;color:var(--muted2);margin-bottom:20px;">R$ 200.000 investidos vs. imobilizados no terreno (sem valorização real)</div>
+    <canvas id="chartOportunidade" height="100"></canvas>
+  </div>
+
+  <!-- Tabela por cenário -->
+  <div style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">Custo de oportunidade por cenário</div>
+  <div class="comp-wrap">
+    <table class="comp">
+      <thead>
+        <tr>
+          <th>Cenário</th>
+          <th>Capital imobilizado</th>
+          <th>Custo mensal extra</th>
+          <th>Custo mensal × 10 anos</th>
+          <th>Custo oportunidade total (4% real)</th>
+          <th>Veredito</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>A · FGTS + Financ.</td>
+          <td class="co">FGTS R$ 60k</td>
+          <td class="cr">R$ 2.950/mês</td>
+          <td class="cr">R$ 354.000</td>
+          <td class="cr">R$ 117.600 perdidos</td>
+          <td class="co">Médio impacto</td>
+        </tr>
+        <tr>
+          <td>B · Home Equity</td>
+          <td class="co">Casa como garantia</td>
+          <td class="cr">R$ 3.530/mês</td>
+          <td class="cr">R$ 423.600</td>
+          <td class="cr">R$ 140.800 perdidos</td>
+          <td class="cr">Alto impacto</td>
+        </tr>
+        <tr>
+          <td>C · Troca</td>
+          <td class="cm">R$ 0 financeiro</td>
+          <td class="co">R$ 1.100/mês</td>
+          <td class="co">R$ 132.000</td>
+          <td class="cg">R$ 43.900 perdidos</td>
+          <td class="cg">Baixo impacto</td>
+        </tr>
+        <tr>
+          <td>D · Não comprar</td>
+          <td class="cg">R$ 0</td>
+          <td class="cg">R$ 0</td>
+          <td class="cg">R$ 0</td>
+          <td class="cg">R$ 0</td>
+          <td class="cg">Nenhum impacto</td>
+        </tr>
+        <tr>
+          <td>E · FGTS + Home Equity</td>
+          <td class="co">FGTS R$ 60k + Casa</td>
+          <td class="co">R$ 2.800/mês</td>
+          <td class="co">R$ 336.000</td>
+          <td class="co">R$ 111.800 perdidos</td>
+          <td class="co">Médio impacto</td>
+        </tr>
+        <tr>
+          <td>F · Acumular e comprar</td>
+          <td class="cg">R$ 0 (acumula)</td>
+          <td class="co">R$ 4.200/mês (36m)</td>
+          <td class="cg">R$ 0 após compra</td>
+          <td class="cg">R$ 0 em juros</td>
+          <td class="cg">Menor impacto total</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Insight -->
+  <div style="background:rgba(59,175,128,0.05);border:1px solid rgba(59,175,128,0.18);border-radius:12px;padding:20px 24px;margin-top:24px;">
+    <div style="font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px;">💡 O que esse número significa na prática</div>
+    <p style="font-size:14px;color:var(--muted);">No Cenário A, além dos juros do financiamento, você perde em termos de custo de oportunidade aproximadamente <strong style="color:var(--white);">R$ 117.600</strong> em 10 anos — valor que seu FGTS e a capacidade de investimento mensal gerariam caso ficassem aplicados a 4% real. No Cenário C, esse custo cai para <strong style="color:var(--green);">R$ 43.900</strong> — apenas o condomínio pago sem retorno imediato. Isso reforça por que a troca, se bem negociada, é financeiramente a decisão mais eficiente.</p>
+  </div>
+</section>
+
+<!-- ── RECOMENDAÇÃO ── -->
+<section class="section reveal" id="recomendacao">
+  <div class="sec-eyebrow">Orientação do planejador</div>
+  <div class="sec-title">Como pensar essa decisão</div>
+  <div class="sec-sub">Visão CFP · Matheus Melo</div>
+
+  <div class="rec-box">
+    <h3>A decisão mais consciente começa pelas perguntas certas</h3>
+    <p>O <strong>Cenário C (Troca)</strong> merece ser aprofundado primeiro. Se a negociação for justa, combina o menor risco financeiro com o maior potencial de valorização — sem comprometer caixa, sem parcelas de financiamento, sem tocar nos investimentos. É o mais eficiente se fechar bem.</p>
+    <p>O <strong>Cenário E (FGTS + Home Equity combinados)</strong> é o mais inteligente entre os cenários de compra direta: usa o FGTS para reduzir o capital financiado e busca a menor taxa disponível via Home Equity. A parcela fica em torno de R$ 2.800/mês — a mais baixa entre quem compra pagando — e os juros totais são os menores dos cenários de crédito.</p>
+    <p>O <strong>Cenário F (Acumular e comprar à vista)</strong> é o mais disciplinado e financeiramente mais limpo — zero juros, nenhuma garantia usada. Depende de negociar prazo com a mãe (ou empresário), mas se isso for viável, é o que preserva mais patrimônio no longo prazo.</p>
+    <p>O <strong>Cenário A</strong> é viável se o orçamento comportar ~R$ 2.950/mês nos meses de comissão menor. O <strong>Cenário B puro</strong> só faz sentido se a renda for muito estável — o risco de colocar a casa como garantia para R$ 200k integrais é alto demais para uma renda variável.</p>
+    <p>E o <strong>Cenário D</strong> continua sendo uma opção legítima. A pergunta que vale refletir: <em>se esse terreno não fosse da sua mãe, você compraria hoje?</em></p>
+  </div>
+</section>
+
+<!-- ── CHECKLIST ── -->
+
+<!-- ── PERGUNTAS PENDENTES ── -->
+<section class="section reveal" id="perguntas">
+  <div class="sec-eyebrow">Para refinar os cenários</div>
+  <div class="sec-title">Dados que faltam</div>
+  <div class="sec-sub">Quanto mais informações, mais precisa fica a análise</div>
+
+  <div class="grid-2">
+    <div>
+      <div class="perguntas-group">
+        <h4>💰 Orçamento</h4>
+        <div class="pergunta-item">Com a promoção, qual sua renda líquida mensal hoje?</div>
+        <div class="pergunta-item">Descontando todas as despesas fixas, quanto sobra por mês? Essa é a parcela máxima que você conseguiria assumir sem apertar a família.</div>
+      </div>
+      <div class="perguntas-group">
+        <h4>🏡 Terreno da mãe</h4>
+        <div class="pergunta-item">Os dois terrenos que você trocaria valem os mesmos R$ 200k, ou têm valores diferentes?</div>
+        <div class="pergunta-item">A escritura está regularizada?</div>
+        <div class="pergunta-item">Você sabe se teria custos de cartório e ITBI? (geralmente 3–4% do valor)</div>
+      </div>
+    </div>
+    <div>
+      <div class="perguntas-group">
+        <h4>🏠 Casa quitada</h4>
+        <div class="pergunta-item">Qual o valor de mercado da sua casa hoje?</div>
+        <div class="pergunta-item">Quanto você recebe de aluguel por mês? (essa renda some se a casa virar garantia no Cenário B)</div>
+      </div>
+      <div class="perguntas-group">
+        <h4>🚗 Consórcio</h4>
+        <div class="pergunta-item">Você pensa em usar a carta de crédito em breve ou é algo para daqui bastante tempo?</div>
+      </div>
+      <div class="perguntas-group">
+        <h4>📊 Investimentos</h4>
+        <div class="pergunta-item">Além da reserva de emergência, você tem outros investimentos? Qual o saldo aproximado?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BRIEFING PRÓXIMA REUNIÃO ── -->
+<section class="section reveal" id="briefing">
+  <div class="sec-eyebrow">Próxima reunião</div>
+  <div class="sec-title">Briefing</div>
+  <div class="sec-sub">O que preparar e onde aprofundar</div>
+
+  <div class="grid-2">
+    <div class="ficha-block">
+      <h4>Situação atual</h4>
+      <div class="briefing-item"><div class="bi-label">Contexto</div><p>Transição profissional com promoção, renda variável. Dívidas quase zeradas. Orçamento em reajuste pós-férias. Decisão pendente sobre terreno.</p></div>
+      <div class="briefing-item"><div class="bi-label">Decisões pendentes</div><p>Compra ou não do terreno · Definição sobre casa atual · Reforma da casa (em dúvida)</p></div>
+      <div class="briefing-item"><div class="bi-label">Riscos a monitorar</div><p>Decisão emocional sobre terreno sem análise completa · Orçamento ainda frouxo · Cunhado mudando de país (indicação potencial)</p></div>
+    </div>
+    <div class="ficha-block">
+      <h4>Perguntas para aprofundar</h4>
+      <div class="briefing-item"><div class="bi-label">Engajamento</div><p>"Você conseguiu ver os cenários? O que fez mais sentido pra você?"</p></div>
+      <div class="briefing-item"><div class="bi-label">Livros</div><p>"O que tocou em você no livro? Teve alguma frase que ficou?"</p></div>
+      <div class="briefing-item"><div class="bi-label">Terreno</div><p>"Se esse terreno não fosse da sua mãe, você compraria hoje?"</p></div>
+      <div class="briefing-item"><div class="bi-label">Provocação</div><p>"Se a comissão cair por 3 meses seguidos, o que acontece com o orçamento se você tiver essa parcela?"</p></div>
+      <div class="briefing-item"><div class="bi-label">Próxima etapa</div><p>"O que você precisa proteger hoje para que tudo que construímos continue de pé?"</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="fl">Grão | Grupo Primo</div>
+  <div class="fr">Matheus Melo · Planejador Financeiro Pessoal<br>Análise elaborada em Junho/2026 · Valores baseados em estimativas de mercado</div>
+</footer>
+
+</div><!-- /main -->
+
+</div><!-- /app -->
+
+<script>
+function checkPwd() {
+  const input = document.getElementById('pwd-input');
+  const error = document.getElementById('pwd-error');
+  if (input.value === 'evaldo2026') {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    // inicializa o gráfico após unlock
+    initChart();
+  } else {
+    error.textContent = 'Senha incorreta. Tente novamente.';
+    input.classList.add('shake');
+    input.value = '';
+    setTimeout(() => input.classList.remove('shake'), 500);
+  }
+}
+
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 60);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.06 });
+  reveals.forEach(el => obs.observe(el));
+
+  // Active nav
+  const sections = document.querySelectorAll('section[id], header[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
+    navLinks.forEach(l => {
+      l.classList.remove('active');
+      if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+    });
+  });
+</script>
+<script>
+  // Custo de oportunidade chart
+  const years = [0,1,2,3,4,5,6,7,8,9,10];
+  const rate = 0.04;
+  const principal = 200000;
+
+  const investido = years.map(y => Math.round(principal * Math.pow(1 + rate, y)));
+  const imobilizado = years.map(() => principal); // sem valorização real
+  const fgts = years.map(y => Math.round(60000 * Math.pow(1 + rate, y)));
+
+  const ctx = document.getElementById('chartOportunidade');
+  if (ctx) {
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: years.map(y => y === 0 ? 'Hoje' : `Ano ${y}`),
+        datasets: [
+          {
+            label: 'R$ 200k investidos (4% real a.a.)',
+            data: investido,
+            borderColor: '#3BAF80',
+            backgroundColor: 'rgba(59,175,128,0.08)',
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointBackgroundColor: '#3BAF80',
+            fill: true,
+            tension: 0.35
+          },
+          {
+            label: 'R$ 200k imobilizados no terreno',
+            data: imobilizado,
+            borderColor: '#C05070',
+            backgroundColor: 'rgba(192,80,112,0.06)',
+            borderWidth: 2,
+            borderDash: [6,4],
+            pointRadius: 3,
+            pointBackgroundColor: '#C05070',
+            fill: true,
+            tension: 0.35
+          },
+          {
+            label: 'FGTS R$ 60k investido (4% real a.a.)',
+            data: fgts,
+            borderColor: '#C9A84C',
+            backgroundColor: 'rgba(201,168,76,0.06)',
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: '#C9A84C',
+            fill: true,
+            tension: 0.35
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#8B8FA8',
+              font: { family: 'DM Sans', size: 12 },
+              boxWidth: 14,
+              padding: 20
+            }
+          },
+          tooltip: {
+            backgroundColor: '#111428',
+            borderColor: '#1a2050',
+            borderWidth: 1,
+            titleColor: '#F4F2ED',
+            bodyColor: '#8B8FA8',
+            callbacks: {
+              label: ctx => {
+                const val = ctx.raw.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+                return ` ${ctx.dataset.label}: ${val}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#5C6080', font: { family: 'DM Sans', size: 11 } },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          },
+          y: {
+            ticks: {
+              color: '#5C6080',
+              font: { family: 'DM Sans', size: 11 },
+              callback: val => 'R$ ' + (val/1000).toFixed(0) + 'k'
+            },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          }
+        }
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
